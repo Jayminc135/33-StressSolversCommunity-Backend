@@ -1,0 +1,32 @@
+{
+  "name": "27-programming-club-backend",
+  "version": "1.0.0",
+  "description": "BackEnd part of the Programming Club Website",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mann23/27-Programming-Club-BackEnd.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mann23/27-Programming-Club-BackEnd/issues"
+  },
+  "homepage": "https://github.com/Mann23/27-Programming-Club-BackEnd#readme",
+  "dependencies": {
+    "apollo-server": "^2.21.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.1",
+    "nodemon": "^2.0.7"
+  }
+}
