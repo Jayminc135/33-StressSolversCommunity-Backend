@@ -5,37 +5,20 @@ const mongoose = require('mongoose')
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const User = require("./user")
+const User = require("./models/user")
 require('dotenv').config()
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-
-function authToken(req, res, next) {
-    console.log("REQ HEADERS", req.headers);
-    const authHeader = req.headers["authorization"];
-    console.log(authHeader);
-    const token = authHeader && authHeader.split(" ")[1];
-    console.log(token);
-    if (token == null) {
-      res.sendStatus(401);
-    }
-  
-    jwt.verify(token, process.env.ACCESS_SECRET_KEY, (err, user) => {
-      if (err) {
-        res.sendStatus(403);
-      }
-  
-      req.user = user;
-      next();
-    });
-  }
-
 mongoose.connect(process.env.MONGODB_CONNECT,{useNewUrlParser: true, useUnifiedTopology: true}).then(()=>{
     console.log("DB connected")
 })
+
+const commentRoute = require("./routes/comment.js");
+app.use("/comment", commentRoute);
+
 app.post("/signIn", async (req, res) => {
   let { email } = req.body;
   let user = await User.findOne({ email: email}).exec();
