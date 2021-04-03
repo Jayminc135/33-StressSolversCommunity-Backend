@@ -14,10 +14,14 @@ app.use(bodyParser.json());
 
 mongoose.connect(process.env.MONGODB_CONNECT,{useNewUrlParser: true, useUnifiedTopology: true}).then(()=>{
     console.log("DB connected")
-})
+  }).catch((error)=>{
+    console.log("mondb not connected");
+    console.log(error);
+});
 
 const commentRoute = require("./routes/comment.js");
 app.use("/comment", commentRoute);
+app.use('/blog',require('./routes/blog'));
 
 app.post("/signIn", async (req, res) => {
   let { email } = req.body;
@@ -55,6 +59,10 @@ app.post("/signUp", async (req, res) => {
     }
   });
   
+app.use((err,req,res,next)=>{
+    //console.log(err);
+    res.status(422).send({error:err.message});
+});
 
 app.listen(port,()=>{
     console.log(`Listening to port ${port}`)
