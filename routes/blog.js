@@ -15,31 +15,19 @@ router.post('/createblog', verify, (req, res, next) => {
 
     //console.log(req.body);
 
-    const email = req.body.email;
+    //const email = req.body.email;
 
-    console.log(email);
+    //console.log(email);
 
-    User.findOne({ email: email }).then((user) => {
-        console.log(email);
-        console.log(user);
-        if (!user) {
-            res.status(400).json({
-                error: "Invalid User"
-            }).catch(next);
-        }
-        else {
-            const bloginstance = new Blog({
-                title: req.body.title,
-                blog: req.body.blog,
-                username: req.body.username,
-                email: req.body.email
-            });
+    const bloginstance = new Blog({
+        title: req.body.title,
+        blog: req.body.blog,
+        username: req.body.username,
+        email: req.user
+    });
 
-            bloginstance.save().then(() => {
-                res.send(bloginstance);
-            }).catch(next);
-        }
-
+    bloginstance.save().then(() => {
+        res.send(bloginstance);
     }).catch(next);
 
 });
@@ -53,7 +41,7 @@ router.delete('/deleteblog/:id', verify, (req, res, next) => {
                 error: "Blog doesn't exit"
             });
         }
-        else if (blog.email != req.body.email) {
+        else if (blog.email != req.user) {
             res.status(400).json({
                 error: "You don't have access to this blog"
             });
@@ -77,7 +65,7 @@ router.put('/updateblog/:id', verify, (req, res, next) => {
                 error: "Blog doesn't exit"
             });
         }
-        else if (blog.email != req.body.email) {
+        else if (blog.email != req.user) {
             res.status(400).json({
                 error: "You don't have access to this blog"
             });
@@ -90,6 +78,17 @@ router.put('/updateblog/:id', verify, (req, res, next) => {
                 }).catch(next);
             }).catch(next);
         }
+    }).catch(next);
+});
+
+router.get('/viewblog', verify, (req, res, next) => {
+
+    Blog.find({}).then((blog) => {
+        var blogs = []
+        blog.forEach((blog) => {
+            blogs.push({ "username": blog.username, "title": blog.title, "blog": blog.blog });
+        })
+        res.send(blogs);
     }).catch(next);
 });
 

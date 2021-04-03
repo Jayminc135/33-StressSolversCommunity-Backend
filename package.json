@@ -1,7 +1,7 @@
 {
-  "name": "Blog",
+  "name": "blog",
   "version": "1.0.0",
-  "description": "",
+  "description": "BackEnd part of the Programming Club Website",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,15 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.2",
+    "mongoose": "^5.12.3",
     "nodemon": "^2.0.7"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mann23/27-Programming-Club-BackEnd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mann23/27-Programming-Club-BackEnd/issues"
+  },
+  "homepage": "https://github.com/Mann23/27-Programming-Club-BackEnd#readme"
 }
