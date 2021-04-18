@@ -26,7 +26,7 @@ app.use('/blog',require('./routes/blog'));
 app.use('/event',events)
 
 app.post("/signIn", async (req, res) => {
-  let { email } = req.body;
+  let { email,username } = req.body;
   
 
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
