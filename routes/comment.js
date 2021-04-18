@@ -75,7 +75,7 @@ router.delete("/:commentId", verifytoken, (req, res, next) => {
 		}
 		else{
 			res.status(200).json({
-				error: "comment deleted successfully!"
+				message: "comment deleted successfully!"
 			});
 		}
 	})
