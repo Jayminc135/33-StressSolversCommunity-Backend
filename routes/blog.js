@@ -1,4 +1,4 @@
-const verify = require('../auth/verifytoken');
+const verify = require('../auth/verifyToken');
 const express = require('express');
 
 const mongoose = require('mongoose');
