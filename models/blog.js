@@ -15,6 +15,9 @@ const blogSchema = new Schema({
             type:String,
             required:true
     },
+    abstraction:{
+            type:String
+    },
     blog:{
         type:String,
         required:true

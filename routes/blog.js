@@ -23,7 +23,8 @@ router.post('/createblog', verify, (req, res, next) => {
         title: req.body.title,
         blog: req.body.blog,
         username: req.body.username,
-        email: req.user
+        email: req.user,
+        abstraction:req.body.abstraction
     });
 
     bloginstance.save().then(() => {
@@ -86,7 +87,7 @@ router.get('/viewblog', verify, (req, res, next) => {
     Blog.find({}).then((blog) => {
         var blogs = []
         blog.forEach((blog) => {
-            blogs.push({ "username": blog.username, "title": blog.title, "blog": blog.blog });
+            blogs.push({ "username": blog.username, "Date":blog.created_at,"title": blog.title, "Abstraction":blog.abstraction,"blog": blog.blog });
         })
         res.send(blogs);
     }).catch(next);
