@@ -12,7 +12,7 @@ router.post("/getFriendsChat", function(request, result) {
         if(user == null) {
             result.json({
                 "status": "error",
-                "message": "User has been logged out. Please Login again"
+                "message": "Enter a valid Email Id"
             });
         }
         else {
@@ -30,7 +30,7 @@ router.post("/getFriendsChat", function(request, result) {
 });
 
 router.post("/sendMessage", function(request, result) {
-    var _id = requests.fields._id;
+    var _id = request.fields._id;
     var message = request.fields.message;
 
     database.collection("users").findOne({
@@ -39,7 +39,7 @@ router.post("/sendMessage", function(request, result) {
         if(user == null) {
             result.json({
                 "status": "error",
-                "message": "User has been logged out. Please Login again"
+                "message": "Enter a valid Email Id"
             });
         }
         else {
@@ -50,7 +50,7 @@ router.post("/sendMessage", function(request, result) {
                 if(user == null) {
                     result.json({
                         "status": "error",
-                        "message": "User has been logged out. Please Login again"
+                        "message": "Enter a valid Email Id"
                     });
                 }
                 else {
@@ -109,7 +109,7 @@ router.post("/connectSocket", function(request, result) {
         if(user == null) {
             result.json({
                 "status": "error",
-                "message": "User has been logged out. Please Login again"
+                "message": "Enter a valid Email Id"
             });
         }
         else {

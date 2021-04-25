@@ -44,6 +44,7 @@ app.post("/signIn", async (req, res) => {
     });
 
     await user.save();
+    
     const accessToken = jwt.sign(
       user.email,
       process.env.ACCESS_SECRET_KEY
