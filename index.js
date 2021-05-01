@@ -40,7 +40,8 @@ app.post("/signIn", async (req, res) => {
   } else {
     const user = new User({
       username: username,
-      email: email
+      email: email,
+      isAdmin: false
     });
 
     await user.save();
@@ -55,6 +56,11 @@ app.post("/signIn", async (req, res) => {
     res.send("Invalid Email")
   }
 });
+
+app.get("/core",async (req,res)=>{
+  let coreMembers = await User.find({isAdmin:true}).exec();
+  res.send(coreMembers)
+})
   
 app.use((err,req,res,next)=>{
     //console.log(err);

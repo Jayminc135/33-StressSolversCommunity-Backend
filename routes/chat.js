@@ -121,3 +121,6 @@ router.post("/connectSocket", function(request, result) {
         }
     });
 });
+
+
+module.exports = router
