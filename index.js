@@ -24,7 +24,7 @@ const events = require("./routes/event")
 app.use("/comment", commentRoute);
 app.use('/blog',require('./routes/blog'));
 app.use('/event',events)
-
+app.use('/chat', require('./routes/chat'));
 app.post("/signIn", async (req, res) => {
   let { email } = req.body;
   
@@ -44,6 +44,7 @@ app.post("/signIn", async (req, res) => {
     });
 
     await user.save();
+    
     const accessToken = jwt.sign(
       user.email,
       process.env.ACCESS_SECRET_KEY
