@@ -93,4 +93,19 @@ router.get('/viewblog', verify, (req, res, next) => {
     }).catch(next);
 });
 
+router.get('/viewblog/:id', verify, (req, res, next) => {
+
+    Blog.findOne({ _id: req.params.id }).then((blog) => {
+        if (!blog) {
+            res.status(400).json({
+                error: "Blog doesn't exit"
+            });
+        }
+        else {
+                res.send({ "username": blog.username, "Date":blog.created_at,"title": blog.title, "Abstraction":blog.abstraction,"blog": blog.blog });
+        }
+    }).catch(next);
+
+});
+
 module.exports = router;
