@@ -87,7 +87,7 @@ router.get('/viewblog', verify, (req, res, next) => {
     Blog.find({}).then((blog) => {
         var blogs = []
         blog.forEach((blog) => {
-            blogs.push({ "username": blog.username, "Date":blog.created_at,"title": blog.title, "Abstraction":blog.abstraction,"blog": blog.blog });
+            blogs.push({ "id":blog._id,"username": blog.username, "Date":blog.created_at,"title": blog.title, "Abstraction":blog.abstraction,"blog": blog.blog });
         })
         res.send(blogs);
     }).catch(next);
