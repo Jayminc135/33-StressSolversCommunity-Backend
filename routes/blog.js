@@ -11,18 +11,21 @@ const User = require('../models/user');
 const router = express.Router();
 
 
-router.post('/createblog', verify, (req, res, next) => {
+router.post('/createblog', verify, async (req, res, next) => {
 
-    //console.log(req.body);
+    const user = await User.findOne({email:req.user}).exec();
 
-    //const email = req.body.email;
+    console.log(user)
 
-    //console.log(email);
+    if(!user){
+        res.send("Invalid user");
+        console.log(user)
+    }
 
     const bloginstance = new Blog({
         title: req.body.title,
         blog: req.body.blog,
-        username: req.body.username,
+        username: user.username?user.username:req.user,
         email: req.user,
         abstraction:req.body.abstraction
     });

@@ -1,13 +1,15 @@
 const router = require("./comment");
 const mongoose = require("mongoose");
 const User = require("../models/user");
+const verifyToken = require('../auth/verifyToken')
 const socketIO = require("socket.io");
 const users = {};
 
-router.post("/getFriendsChat", function(request, result) {
+router.post("/getFriendsChat",verifyToken, function(request, result) {
+    console.log(request.fields._id)
     var _id = request.fields._id;
-    database.collection("users").findOne({
-        "email" : request.fields.email
+    User.findOne({
+        "email" : req.user
     }, function(error, user) {
         if(user == null) {
             result.json({
