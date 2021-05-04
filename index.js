@@ -39,7 +39,7 @@ app.post("/signIn", async (req, res) => {
     res.json({ accessToken: accessToken });
   } else {
     const user = new User({
-      username: username,
+      username: username.split(/\s/).join(''),
       email: email,
       isAdmin: false
     });
