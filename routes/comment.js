@@ -19,7 +19,8 @@ router.post("/", verifytoken, (req, res, next) => {
 	commentObj.save().then(result => {
 		console.log(result);
 		res.status(200).json({
-			message: "Comment saved successfully!"
+			message: "Comment saved successfully!",
+			commentSaved: commentObj
 		});
 	})
 	.catch(err => {
