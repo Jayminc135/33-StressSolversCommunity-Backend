@@ -1,123 +1,103 @@
-const router = require("./comment");
-const mongoose = require("mongoose");
-const User = require("../models/user");
-const socketIO = require("socket.io");
-const users = {};
+const router = require("express").Router();
+const Conversation = require("../models/Conversation");
+const Message = require("../models/Message");
 
-router.post("/getFriendsChat", function(request, result) {
-    var _id = request.fields._id;
-    database.collection("users").findOne({
-        "email" : request.fields.email
-    }, function(error, user) {
-        if(user == null) {
-            result.json({
-                "status": "error",
-                "message": "Enter a valid Email Id"
-            });
-        }
-        else {
-            var index = user.friends.findIndex(function(friend) {
-                return friend._id == _id; 
-            });
-            var inbox = user.friends[index].inbox;
-            result.json({
-                "status": "success",
-                "message": "Record has been fetched",
-                "data": inbox
-            });
-        }
+const io = require("socket.io")(8900, {
+    cors: {
+      origin: "http://localhost:3000",
+    },
+  });
+  
+  let users = [];
+  
+  const addUser = (userId, socketId) => {
+    !users.some((user) => user.userId === userId) &&
+      users.push({ userId, socketId });
+  };
+  
+  const getUser = (userId) => {
+    return users.find((user) => user.userId === userId);
+  };
+  
+  io.on("connection", (socket) => {
+    //when connect
+    console.log("a user connected.");
+  
+    //take userId and socketId from user
+    socket.on("addUser", (userId) => {
+      addUser(userId, socket.id);
+      io.emit("getUsers", users);
     });
+  
+    //send and get message
+    socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+      const user = getUser(receiverId);
+      io.to(user.socketId).emit("getMessage", {
+        senderId,
+        text,
+      });
+    });
+  });
+  
+  //conversation.js added below
+  
+  //new conv
+  
+  router.post("/", async (req, res) => {
+    const newConversation = new Conversation({
+      members: [req.body.senderId, req.body.receiverId],
+    });
+  
+    try {
+      const savedConversation = await newConversation.save();
+      res.status(200).json(savedConversation);
+    } catch (err) {
+      res.status(500).json(err);
+    } 
+  });
+  
+  //get conv of a user
+  
+  router.get("/:userId", async (req, res) => {
+    try {
+      const conversation = await Conversation.find({
+        members: { $in: [req.params.userId] },
+      });
+      res.status(200).json(conversation);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+  
+  
+  //messeges.js added below
+
+//add
+
+router.post("/", async (req, res) => {
+  const newMessage = new Message(req.body);
+
+  try {
+    const savedMessage = await newMessage.save();
+    res.status(200).json(savedMessage);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.post("/sendMessage", function(request, result) {
-    var _id = request.fields._id;
-    var message = request.fields.message;
+//get
 
-    database.collection("users").findOne({
-        "email" : request.fields.email
-    }, function(error, user) {
-        if(user == null) {
-            result.json({
-                "status": "error",
-                "message": "Enter a valid Email Id"
-            });
-        }
-        else {
-            var me = user;
-            database.collection("users").findOne({
-                "_id": ObjectId(_id)
-            } ,function(error, user) {
-                if(user == null) {
-                    result.json({
-                        "status": "error",
-                        "message": "Enter a valid Email Id"
-                    });
-                }
-                else {
-                    database.collection("users").updateOne({
-                        $and: [{
-                            "_id": ObjectId(_id)
-                        }, {
-                            "friends._id": me._id
-                        }]
-                    }, {
-                        $push: {
-                            "friends.$.inbox": {
-                                "_id": ObjectId(),
-                                "message": message, 
-                                "from" : me._id
-                            }
-                        }
-                    }, function(error, data) {
-                        database.collection("users").updateOne({
-                            $and: [{
-                                "_id": me._id
-                            }, {
-                                "friends._id": user._id
-                            }]
-                        }, {
-                            $push: {
-                                "friends.$.inbox": {
-                                    "_id": ObjectId(),
-                                    "message": message, 
-                                    "from" : me._id
-                                }
-                            }
-                        }, function(error, data) {
-
-                            socketIO.to(users[user._id]).emit("messageRecieved", {
-                                "message": message,
-                                "from": me._id
-                            })
-
-                            result.json({
-                                "status": "success",
-                                "message": "Message has been sent."
-                            });
-                        });
-                    });
-                }
-            });
-        }
+router.get("/:conversationId", async (req, res) => {
+  try {
+    const messages = await Message.find({
+      conversationId: req.params.conversationId,
     });
+    res.status(200).json(messages);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-router.post("/connectSocket", function(request, result) {
-    database.collection("users").findOne({
-        "email" : request.fields.email
-    }, function(error, user) {
-        if(user == null) {
-            result.json({
-                "status": "error",
-                "message": "Enter a valid Email Id"
-            });
-        }
-        else {
-            users[user._id] = socketID;
-            result.json({
-                "status": "status",
-                "message": "Socket has been connected"
-            });
-        }
-    });
-});
+
+
+  module.exports = router;
