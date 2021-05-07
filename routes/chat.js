@@ -27,8 +27,7 @@ const conversations = require("../models/conversations");
 
 router.post("/addMessage", verifyToken,async (req, res) => {
   let {text,conversationId} = req.body
-  console.log(text)
-  console.log(conversationId)
+
 
   const sender = await User.findOne({email:req.user}).exec()
   const newMessage = new Message({
@@ -47,7 +46,6 @@ router.post("/addMessage", verifyToken,async (req, res) => {
 
 router.get("/message/:conversationId", async (req, res) => {
   try {
-    console.log(req.params.conversationId)
     const messages = await Message.find({
       conversationId: req.params.conversationId,
     });
