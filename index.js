@@ -5,7 +5,9 @@ const mongoose = require('mongoose')
 const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const verifyToken = require("./auth/verifyToken.js");
 const User = require("./models/user")
+const Conversation = require("./models/conversations");
 require('dotenv').config()
 
 app.use(cors());
@@ -45,6 +47,17 @@ app.post("/signIn", async (req, res) => {
     });
 
     await user.save();
+
+    const core = await User.find({isAdmin:true}).exec();
+
+    (await core).forEach(async (member)=>{
+      const newConversation = new Conversation({
+        members: [user._id,member._id],
+      });
+
+      await newConversation.save()
+    })
+    
     
     const accessToken = jwt.sign(
       user.email,
@@ -61,9 +74,15 @@ app.get("/core",async (req,res)=>{
   let coreMembers = await User.find({isAdmin:true}).exec();
   res.send(coreMembers)
 })
+
+app.get("/users/:userId",verifyToken,async (req,res)=>{
+  console.log(req.params.userId)
+  const user = await User.findById(req.params.userId).exec()
+
+  res.json({username:user.username})
+})
   
 app.use((err,req,res,next)=>{
-    //console.log(err);
     res.status(422).send({error:err.message});
 });
 
