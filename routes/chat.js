@@ -14,18 +14,9 @@ const conversations = require("../models/conversations");
         members: { $in: [user._id] },
       }).exec();
 
-      const result = []
-
-      console.log(conversation)
-
+      const result = [] 
       conversation.forEach((conv)=>{        
-        let anotherUser 
-        conv.members.forEach((member)=>{
-          if(member !=user._id ){
-            anotherUser = member
-          }
-        })
-        result.push({_id:conv._id,anotherUser:anotherUser})
+        result.push({_id:conv._id,members:conv.members,user:user._id})
       })
       res.status(200).json(result);
     } catch (err) {
